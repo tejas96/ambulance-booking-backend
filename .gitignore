@@ -1,0 +1,11 @@
+**/node_modules/**
+/build
+/dist
+**/.env
+**/.env.local
+**/.env.development
+**/.env.test
+**/.env.production
+**/.env.staging
+**/.env.docker
+/src/config/college-projects-bf5f9-firebase-adminsdk-u9keq-da243f4906.json

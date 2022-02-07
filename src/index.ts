@@ -1,6 +1,7 @@
 import app, { initRoutes } from './routes';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+var morgan = require('morgan');
 
 // create application/json parser
 var jsonParser = bodyParser.json();
@@ -11,6 +12,9 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 // apply the body parser middleware to all incoming requests
 app.use(jsonParser);
 app.use(urlencodedParser);
+
+// apply the morgan middleware to log all requests
+app.use(morgan('combined'));
 
 dotenv.config();
 initRoutes();

@@ -1,30 +1,37 @@
-import { Request, Response } from 'express';
-import { Response as ResponseModel, HttpStatusCode } from '../model/Http';
+import { Response } from 'express';
 import Admin from '../config/firebaseAdmin';
+import {
+    HttpStatusCode,
+    MyRequest,
+    Response as ResponseModel,
+} from '../model/Http';
 import User from '../model/User';
-import { userRegisterSchema } from '../validations/rules';
+// import { userRegisterSchema } from '../validations/rules';
 
-export const registerUser = (req: Request, res: Response) => {
-    userRegisterSchema
-        .validate(req.body, { abortEarly: false })
-        .catch((err) => {
-            const resObject: ResponseModel = {
-                status: 400,
-                message: err.message,
-                data: null,
-                error: err.inner,
-            };
-            res.status(400).json(resObject);
-        });
+export const registerUser = async (req: MyRequest, res: Response) => {
+    // userRegisterSchema
+    //     .validate(req.body, { abortEarly: false })
+    //     .catch((err) => {
+    //         const resObject: ResponseModel = {
+    //             status: 400,
+    //             message: err.message,
+    //             data: null,
+    //             error: err.inner,
+    //         };
+    //         res.status(400).json(resObject);
+    //     });
+    const uid = req.authUser?.uid || '';
     const user = <User>req.body;
-    Admin.firestore()
+    await Admin.firestore()
         .collection('Users')
-        .add({
-            user,
-        })
+        .doc(uid)
+        .set(user)
         .then((doc) => {
-            console.log(doc.id);
-            res.send(doc.id);
+            if (doc.isEqual(doc)) {
+                res.status(HttpStatusCode.OK);
+            } else {
+                res.status(HttpStatusCode.NOT_CREATED).send('User not created');
+            }
         })
         .catch((err) => {
             const resObject: ResponseModel = {
@@ -37,9 +44,9 @@ export const registerUser = (req: Request, res: Response) => {
         });
 };
 
-export const getUser = async (req: Request, res: Response) => {
-    const { user_id } = req.body;
-    const user = await Admin.firestore().collection('Users').doc(user_id).get();
+export const getUser = async (req: MyRequest, res: Response) => {
+    const uid = req.authUser?.uid || '';
+    const user = await Admin.firestore().collection('Users').doc(uid).get();
 
     const userObject = user.data();
     if (!userObject)

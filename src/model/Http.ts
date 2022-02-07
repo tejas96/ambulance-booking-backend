@@ -1,3 +1,6 @@
+import { Request } from 'express';
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
+
 export type Response = {
     status?: number;
     message: string;
@@ -26,4 +29,7 @@ export enum HttpStatus {
     NOT_FOUND = 'NOT_FOUND',
     INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
     NOT_CREATED = 'DATA NOT CREATED',
+}
+export interface MyRequest extends Request {
+    authUser?: DecodedIdToken;
 }

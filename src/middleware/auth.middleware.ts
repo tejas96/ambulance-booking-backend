@@ -1,28 +1,27 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import FirebaseAdmin from '../config/firebaseAdmin';
-import ApiError from '../helper/errorHandling';
-import { HttpStatus, HttpStatusCode } from '../model/Http';
+import { MyRequest } from '../model/Http';
 
-const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware = async (
+    req: MyRequest,
+    res: Response,
+    next: NextFunction
+) => {
     const { authorization } = req.headers;
     if (authorization) {
-        FirebaseAdmin.auth()
-            .verifyIdToken(authorization)
-            .then((decodedToken) => {
-                req.body.userId = decodedToken.uid;
+        const token = authorization.substring(7);
+        await FirebaseAdmin.auth()
+            .verifyIdToken(token)
+            .then((decodedIdToken: DecodedIdToken) => {
+                req.authUser = decodedIdToken;
                 next();
             })
             .catch((err) => {
-                res.status(401).send(err);
+                return res.status(401).send(err);
             });
     } else {
-        throw new ApiError(
-            HttpStatus.UNAUTHORIZED,
-            HttpStatusCode.UNAUTHORIZED
-        );
-
-        return;
+        return res.status(401).send('Unauthorized');
     }
-    next();
 };
 export default authMiddleware;

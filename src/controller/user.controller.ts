@@ -6,20 +6,8 @@ import {
     Response as ResponseModel,
 } from '../model/Http';
 import User from '../model/User';
-// import { userRegisterSchema } from '../validations/rules';
 
 export const registerUser = async (req: MyRequest, res: Response) => {
-    // userRegisterSchema
-    //     .validate(req.body, { abortEarly: false })
-    //     .catch((err) => {
-    //         const resObject: ResponseModel = {
-    //             status: 400,
-    //             message: err.message,
-    //             data: null,
-    //             error: err.inner,
-    //         };
-    //         res.status(400).json(resObject);
-    //     });
     const uid = req.authUser?.uid || '';
     const user = <User>req.body;
     await Admin.firestore()
@@ -28,7 +16,9 @@ export const registerUser = async (req: MyRequest, res: Response) => {
         .set(user)
         .then((doc) => {
             if (doc.isEqual(doc)) {
-                res.status(HttpStatusCode.OK);
+                res.status(HttpStatusCode.OK).send(
+                    'User registered successfully'
+                );
             } else {
                 res.status(HttpStatusCode.NOT_CREATED).send('User not created');
             }

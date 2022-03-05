@@ -63,7 +63,7 @@ export const getHospitalsByCityName = async (
     hospitals.docs.map((doc) => {
         const data = doc.data();
         if (data) {
-            hospitalData.push({ id: doc.id, data });
+            hospitalData.push({ id: doc.id, ...data });
         }
     });
     response.data = hospitalData;

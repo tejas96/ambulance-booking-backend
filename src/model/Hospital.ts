@@ -4,7 +4,7 @@ export interface Location {
     city: string;
     state: string;
     country: string;
-    pinCode: number;
+    pinCode: string;
     locality: string;
 }
 

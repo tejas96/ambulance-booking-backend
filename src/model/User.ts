@@ -3,6 +3,19 @@ export enum UserRole {
     PASSENGER = 'PASSENGER',
 }
 
+export interface Ride {
+    amount: number;
+    from: {
+        latitude: number;
+        longitude: number;
+    };
+    to: {
+        latitude: number;
+        longitude: number;
+    };
+    timestamp: number;
+}
+
 type User = {
     displayName?: string | undefined | null;
     email?: string | undefined | null;
@@ -14,6 +27,8 @@ type User = {
     emailVerified?: boolean;
     useRole: UserRole;
     gender: string;
+    rides?: Array<Ride>;
+    status?: boolean;
 };
 
 export default User;

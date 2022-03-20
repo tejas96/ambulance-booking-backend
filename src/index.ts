@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 var morgan = require('morgan');
 import SocketServer from './socket/socketServer';
 
-const socket = new SocketServer(app);
+const socket = new SocketServer();
 socket.createServer(3000);
 socket.start();
 

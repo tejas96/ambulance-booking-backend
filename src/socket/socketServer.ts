@@ -1,4 +1,7 @@
 import { Server } from 'socket.io';
+import SocketActions from '../services/SocketActions';
+
+const socketActionsService = new SocketActions();
 
 class SocketServer {
     public io: any;
@@ -24,21 +27,19 @@ class SocketServer {
 
     private eventsStart() {
         this.io.on('connection', (socket: any) => {
-            console.log('a user connected :D', socket.handshake.query.userId);
-            socket.on('chat', (msg: any) => {
-                console.log(msg);
-                this.io.emit('chat message', msg);
-            });
+            socketActionsService.addUser(socket.handshake.query);
             socket.on('disconnect', () => {
                 console.log('user disconnected');
                 socket.broadcast.emit('user disconnected');
             });
-            socket.on('Sangli', () => {
-                console.log('Sangli');
-                socket.broadcast.emit('Sangli');
-            });
-            socket.on('Kolhapur', () => {
-                socket.broadcast.emit('Kolhapur');
+
+            //join room
+            socket.on('room', (payload: any) => {
+                socketActionsService.addUser(payload);
+                socket.join(payload.room);
+                this.io
+                    .to(payload.room)
+                    .emit('users', socketActionsService.getUsers());
             });
         });
     }

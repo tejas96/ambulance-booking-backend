@@ -11,6 +11,12 @@ export interface SocketUser {
     room: string;
 }
 export interface SocketReducerAction {
-    type: 'ADD_USER' | 'DELETE_USER' | 'UPDATE_USER' | 'GET_USER';
+    type:
+        | 'ADD_DRIVERS'
+        | 'DELETE_DRIVER'
+        | 'DELETE_PASSENGER'
+        | 'UPDATE_USER'
+        | 'GET_USER'
+        | 'ADD_PASSENGERS';
     payload: Array<SocketUser>;
 }

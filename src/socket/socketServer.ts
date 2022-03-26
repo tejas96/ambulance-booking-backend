@@ -38,14 +38,26 @@ class SocketServer {
             socket.on('room', (payload: SocketUser) => {
                 if (payload.userRole === UserRole.DRIVER)
                     socketActionsService.addUser(payload);
+                else socketActionsService.addPassenger(payload);
                 socket.join(payload.room);
                 this.io
                     .to(payload.room)
-                    .emit('users', socketActionsService.getUsers());
+                    .emit(
+                        'users',
+                        socketActionsService.getUsers(UserRole.DRIVER)
+                    );
             });
 
-            socket.on('bookAmbulance', (payload: any) => {
-                socket.emit('HdLAPeVGm0eTLpuZ7pEAWlJNwiw1', payload);
+            socket.on('request', (payload: any) => {
+                const driver: SocketUser | null =
+                    socketActionsService.findNearestDriver(payload);
+                if (driver) {
+                    this.io.to(driver.room).emit(driver.userId, payload);
+                }
+            });
+
+            socket.on('deleteUser', (payload: any) => {
+                socketActionsService.deleteUser(payload);
             });
         });
     }

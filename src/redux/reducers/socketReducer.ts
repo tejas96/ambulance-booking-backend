@@ -17,7 +17,7 @@ const socketReducer = (state = initialState, action: SocketReducerAction) => {
     switch (action.type) {
         case 'ADD_USER':
             return produce(state, (draft) => {
-                draft.users.push(action.payload);
+                draft.users = action.payload;
             });
         case 'DELETE_USER':
             return {};

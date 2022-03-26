@@ -12,5 +12,5 @@ export interface SocketUser {
 }
 export interface SocketReducerAction {
     type: 'ADD_USER' | 'DELETE_USER' | 'UPDATE_USER' | 'GET_USER';
-    payload: SocketUser;
+    payload: Array<SocketUser>;
 }

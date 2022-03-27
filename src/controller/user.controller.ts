@@ -39,18 +39,7 @@ export const getUser = async (req: MyRequest, res: Response) => {
     const user = await Admin.firestore().collection('Users').doc(uid).get();
 
     const userObject = user.data();
-    if (!userObject)
-        return res.status(400).json({
-            status: HttpStatusCode.NOT_FOUND,
-            message: 'User not found',
-            data: null,
-            error: null,
-        });
+    if (!userObject) return res.status(400).send('User not found');
 
-    return res.status(200).json({
-        status: HttpStatusCode.OK,
-        message: 'User found',
-        data: userObject,
-        error: null,
-    });
+    return res.status(200).send(userObject);
 };

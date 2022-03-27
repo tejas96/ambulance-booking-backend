@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { UserRole } from '../model';
+import { userIdListenerPayload, UserRole } from '../model';
 import { SocketUser } from '../model/redux';
 import SocketActions from '../services/SocketActions';
 
@@ -52,12 +52,27 @@ class SocketServer {
                 const driver: SocketUser | null =
                     socketActionsService.findNearestDriver(payload);
                 if (driver) {
-                    this.io.to(driver.room).emit(driver.userId, payload);
+                    this.io
+                        .to(driver.room)
+                        .emit(driver.userId, { type: 'booking', payload });
                 }
             });
 
             socket.on('deleteUser', (payload: any) => {
                 socketActionsService.deleteUser(payload);
+            });
+
+            socket.on('sharing', (payload: userIdListenerPayload) => {
+                switch (payload.type) {
+                    case 'bookingRequestStatus':
+                        this.io.to(payload.room).emit(payload.userId, payload);
+                        break;
+                    case 'tracking':
+                        this.io.to(payload.room).emit(payload.userId, payload);
+                        break;
+                    default:
+                        break;
+                }
             });
         });
     }

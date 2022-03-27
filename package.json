@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "book ambulance",
   "main": "index.js",
+  "engines": {
+    "node": "12.14.0",
+    "yarn": "1.22.11"
+  },
   "scripts": {
     "start": "ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",

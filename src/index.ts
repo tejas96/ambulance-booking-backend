@@ -5,7 +5,7 @@ var morgan = require('morgan');
 import SocketServer from './socket/socketServer';
 
 const socket = new SocketServer();
-socket.createServer(app, 3000);
+socket.createServer(app, process.env.PORT ? +process.env.PORT : 5000);
 socket.start();
 
 // create application/json parser
